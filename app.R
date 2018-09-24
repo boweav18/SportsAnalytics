@@ -2,6 +2,7 @@
 # data. This data comes from the masterbigTEST.R file which creates
 # a dataset called 'master'.
 
+# This is a test change
 
 #### Dependencies ####
 # uncomment when publishing
@@ -19,8 +20,14 @@ library(readxl)
 # 
 
 #### IMPORT DATA ####
-master <- read_csv("Master1Test.csv", 
-                                  col_types = cols(X1 = col_skip()))
+# mastertotal <- read_csv("mastertotal.csv", col_types = cols(X1 = col_skip()))
+master <- read_csv("Master1Test.csv", col_types = cols(X1 = col_skip()))
+All_Results <- read_excel("All-Time FB Results.xlsx", 
+                                  sheet = "All Gms")
+All_Results = All_Results %>% select(Year,`W/L` ,Opponent2,`Opp Conf`,WFU,Opp,Margin)
+colnames(All_Results) = c('calYear',"W/L","Opponent",'OppConf','WFU_Score','OPP_Score','Score_Margin')
+test
+
 def_indiv = read_csv("IndivDefensiveStats.csv")
 Wake_TeamStats <- read_excel("TeamStats.xlsx", sheet = "Wake")
 Opp_TeamStats <- read_excel("TeamStats.xlsx", sheet = "Opp")
@@ -125,9 +132,9 @@ ui = fluidPage(
     checkboxInput('def_yr','All/None',value = FALSE)),
   
   ## Are we wanting consecutive or no?
-  selectInput("v2", "Consecutive or stand-alone:",
-              c("Stand-Alone" = "alone",
-                "Consecutive" = "cons")),
+  #selectInput("v2", "Consecutive or stand-alone:",
+  #            c("Stand-Alone" = "alone",
+  #              "Consecutive" = "cons")),
   
   ## Choose between rushing, passing, recieving, etc...
   selectInput("v7", "Area of Game:",
