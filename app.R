@@ -26,7 +26,6 @@ All_Results <- read_excel("All-Time FB Results.xlsx",
                                   sheet = "All Gms")
 All_Results = All_Results %>% select(Year,`W/L` ,Opponent2,`Opp Conf`,WFU,Opp,Margin)
 colnames(All_Results) = c('calYear',"W/L","Opponent",'OppConf','WFU_Score','OPP_Score','Score_Margin')
-test
 
 def_indiv = read_csv("IndivDefensiveStats.csv")
 Wake_TeamStats <- read_excel("TeamStats.xlsx", sheet = "Wake")
