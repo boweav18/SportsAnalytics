@@ -20,10 +20,14 @@ library(readxl)
 # 
 
 #### IMPORT DATA ####
-# mastertotal <- read_csv("mastertotal.csv", col_types = cols(X1 = col_skip()))
-master <- read_csv("Master1Test.csv", col_types = cols(X1 = col_skip()))
-All_Results <- read_excel("All-Time FB Results.xlsx", 
-                                  sheet = "All Gms")
+mastertotal <- read_csv("mastertotal.csv", col_types = cols(X1 = col_skip()))
+# add home/away and win/loss
+mastertotal$WinLoss = rep(NA,nrow(mastertotal))
+mastertotal$HomeAway = rep("Home",nrow(mastertotal))
+mastertotal = mastertotal[,c(1:7,38,37,8:36)]
+#master <- read_csv("Master1Test.csv", col_types = cols(X1 = col_skip()))
+master = mastertotal
+All_Results <- read_excel("All-Time FB Results.xlsx", sheet = "All Gms")
 All_Results = All_Results %>% select(Year,`W/L` ,Opponent2,`Opp Conf`,WFU,Opp,Margin)
 colnames(All_Results) = c('calYear',"W/L","Opponent",'OppConf','WFU_Score','OPP_Score','Score_Margin')
 
@@ -88,7 +92,7 @@ def_pos_box = list(tags$div(align = 'left',
                 checkboxGroupInput(inputId  = 'pos_def', 
                                    label    = "Select Positions:", 
                                    choices  = def_pos_choices,
-                                   inline   = TRUE)))
+                                   inline   = FALSE)))
 
 maximum_year = as.numeric(format(Sys.Date(), "%Y"))
 minimum_year = as.numeric(min(master$calYear))
@@ -135,6 +139,10 @@ ui = fluidPage(
   #            c("Stand-Alone" = "alone",
   #              "Consecutive" = "cons")),
   
+  ## Are we wanting sums of columns or no?
+  selectInput("sums",'Sum Columns for Each Player for Each Year?',
+              c("No" = 'n',"Yes" = 'y')),
+  
   ## Choose between rushing, passing, recieving, etc...
   selectInput("v7", "Area of Game:",
                        choices = game_area_choices),
@@ -149,7 +157,7 @@ ui = fluidPage(
   #headerPanel('_________________'),
   
   ## Choose the number of additional filters to add ##
-  numericInput("num_add","Number of Additional Filters (Max 7):",0,min = 0,max = 7),
+  numericInput("num_add","Number of Additional Individual Game Filters (Max 7):",0,min = 0,max = 7),
   
   conditionalPanel(
     condition = "input.num_add > 0",
@@ -382,10 +390,19 @@ server = function(input, output, session) {
                        rowSums(is.na(master[,game_area_list])) != length(master[,game_area_list])# exclude if entirely empty
                      )
         rows = intersect(rows,filterRows)
-        # If we want consecutive pattern
-        if(input$v2 == 'cons'){
-          master[rows,game_area_filter_rows]
-        }  else {
+        # If we want sums
+        if (input$sums == 'y'){
+          a1 = master[rows,game_area_filter_rows] %>%
+            arrange(Name,calYear,WeekNum) %>%
+            mutate(WeekNum = as.character(WeekNum)) %>%
+            group_by(Name,calYear) %>%
+            mutate(gameNumbers = paste0(WeekNum,collapse = ', '))
+          
+          a1 %>%
+            group_by(Name,calYear,gameNumbers) %>%
+            summarise_if(is.numeric, sum, na.rm = TRUE)
+          
+        } else {
           master[rows,game_area_filter_rows]
         }
       }
@@ -399,5 +416,4 @@ server = function(input, output, session) {
 
 #### RUN SHINYAPP ####
 shinyApp(ui = ui, server = server)
-
 
