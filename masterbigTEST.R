@@ -514,3 +514,6 @@ if (is.na(master1$PlayerPosition[i])==TRUE){
 #warnings here are fine - no affect on computation (simply attempting to find the min of a table that doesn't exist -- happens when there are no records of a playerposition in the dataset at all)
 
 write.csv(master1,file = "master1new.csv")
+
+
+#test#
