@@ -31,7 +31,7 @@ All_Results <- read_excel("All-Time FB Results.xlsx", sheet = "All Gms")
 All_Results = All_Results %>% select(Year,`W/L` ,Opponent2,`Opp Conf`,WFU,Opp,Margin)
 colnames(All_Results) = c('calYear',"W/L","Opponent",'OppConf','WFU_Score','OPP_Score','Score_Margin')
 
-def_indiv = read_csv("IndivDefensiveStats.csv")
+def_indiv = read_csv("def_ind_reformatted.csv")[-1]
 Wake_TeamStats <- read_excel("TeamStats.xlsx", sheet = "Wake")
 Opp_TeamStats <- read_excel("TeamStats.xlsx", sheet = "Opp")
 
@@ -39,9 +39,9 @@ Opp_TeamStats <- read_excel("TeamStats.xlsx", sheet = "Opp")
 off_pos_choices = unique(master$PlayerPosition)
 #off_pos_choices = sort(off_pos_choices[which(!is.na(off_pos_choices))])
 off_pos_choices = sort(off_pos_choices)
-def_pos_choices = unique(sort(def_indiv$Pos))
+def_pos_choices = unique(sort(def_indiv$PlayerPosition))
 off_academic_yr_choices = unique(sort(master$PlayerYear))
-def_academic_yr_choices = unique(sort(def_indiv$Class))
+def_academic_yr_choices = unique(sort(def_indiv$PlayerYear))
 #off_academic_yr_choices = sort(off_academic_yr_choices[which(!is.na(off_academic_yr_choices))])
 game_area_choices = c('All Areas','Rushing','Passing','Recieving','Punting','Kicking','Interceptions','All Purpose','Punt Return','Kick Return')
 
@@ -55,6 +55,15 @@ offenseFilterRowInput<-function (inputID1,inputID2,inputID3)
   fluidRow(
     column(3, selectInput(inputID1, "Choose the Variable to Filter:",
                           colnames(master[,c(3,10:length(master))]))),# only the numeric columns without pre-existing filters
+    column(3, selectInput(inputID2, 'Relationship', c("Less Than", "Equal To", "Greater Than"))),
+    column(3, numericInput(inputID3,"Value",0))
+  )
+}
+defenseFilterRowInput<-function (inputID1,inputID2,inputID3) 
+{
+  fluidRow(
+    column(3, selectInput(inputID1, "Choose the Variable to Filter:",
+                          colnames(def_indiv[,5:25]))),# only the numeric columns without pre-existing filters
     column(3, selectInput(inputID2, 'Relationship', c("Less Than", "Equal To", "Greater Than"))),
     column(3, numericInput(inputID3,"Value",0))
   )
@@ -95,7 +104,7 @@ def_pos_box = list(tags$div(align = 'left',
                                    inline   = FALSE)))
 
 maximum_year = as.numeric(format(Sys.Date(), "%Y"))
-minimum_year = as.numeric(min(master$calYear))
+minimum_year = as.numeric(min(c(master$calYear,def_indiv$calYear)))
 
 
 #### UI ####
@@ -103,9 +112,9 @@ ui = fluidPage(
   titlePanel("Wake Forest Football Statistics"),
   ## Choose Dataset to use
   selectInput("v1", "Choose Offense or Defense:",
-              c("Offense (Individual)" = "off_ind",
+              c("Offense (Individual Game)" = "off_ind",
                 "Offense (Team)" = "off_team",
-                "Defense (Individual)" = "def_ind",
+                "Defense (Individual Season)" = "def_ind",
                 "Defense (Team)" = "def_team")),
   
   ## IF offensive individual, choose OFFENSIVE position ##
@@ -140,7 +149,7 @@ ui = fluidPage(
   #              "Consecutive" = "cons")),
   
   ## Are we wanting sums of columns or no?
-  selectInput("sums",'Sum Columns for Each Player for Each Year?',
+  selectInput("sums",'Sum Columns for Each Player?',
               c("No" = 'n',"Yes" = 'y')),
   
   ## Choose between rushing, passing, recieving, etc...
@@ -160,32 +169,62 @@ ui = fluidPage(
   numericInput("num_add","Number of Additional Individual Game Filters (Max 7):",0,min = 0,max = 7),
   
   conditionalPanel(
-    condition = "input.num_add > 0",
+    condition = "input.v1 == 'off_ind' & input.num_add > 0",
     offenseFilterRowInput("add1","eq_1","rhs_1"),
     conditionalPanel(
-      condition = "input.num_add > 1",
+      condition = "input.v1 == 'off_ind' & input.num_add > 1",
       offenseFilterRowInput("add2","eq_2","rhs_2")
     ),
       conditionalPanel(
-        condition = "input.num_add > 2",
+        condition = "input.v1 == 'off_ind' & input.num_add > 2",
         offenseFilterRowInput("add3","eq_3","rhs_3")
         ),
         conditionalPanel(
-          condition = "input.num_add > 3",
+          condition = "input.v1 == 'off_ind' & input.num_add > 3",
           offenseFilterRowInput("add4","eq_4","rhs_4")
         ),
           conditionalPanel(
-            condition = "input.num_add > 4",
+            condition = "input.v1 == 'off_ind' & input.num_add > 4",
             offenseFilterRowInput("add5","eq_5","rhs_5")
           ),
             conditionalPanel(
-              condition = "input.num_add > 5",
+              condition = "input.v1 == 'off_ind' & input.num_add > 5",
               offenseFilterRowInput("add6","eq_6","rhs_6")
             ),
               conditionalPanel(
-                condition = "input.num_add > 6",
+                condition = "input.v1 == 'off_ind' & input.num_add > 6",
                 offenseFilterRowInput("add7","eq_7","rhs_7")
               )
+    
+  ),
+  
+  conditionalPanel(
+    condition = "input.v1 == 'def_ind' & input.num_add > 0",
+    defenseFilterRowInput("def_add1","def_eq_1","def_rhs_1"),
+    conditionalPanel(
+      condition = "input.v1 == 'def_ind' & input.num_add > 1",
+      defenseFilterRowInput("def_add2","def_eq_2","def_rhs_2")
+    ),
+    conditionalPanel(
+      condition = "input.v1 == 'def_ind' & input.num_add > 2",
+      defenseFilterRowInput("def_add3","def_eq_3","def_rhs_3")
+    ),
+    conditionalPanel(
+      condition = "input.v1 == 'def_ind' & input.num_add > 3",
+      defenseFilterRowInput("def_add4","def_eq_4","def_rhs_4")
+    ),
+    conditionalPanel(
+      condition = "input.v1 == 'def_ind' & input.num_add > 4",
+      defenseFilterRowInput("def_add5","def_eq_5","def_rhs_5")
+    ),
+    conditionalPanel(
+      condition = "input.v1 == 'def_ind' & input.num_add > 5",
+      defenseFilterRowInput("def_add6","def_eq_6","def_rhs_6")
+    ),
+    conditionalPanel(
+      condition = "input.v1 == 'def_ind' & input.num_add > 6",
+      defenseFilterRowInput("def_add7","def_eq_7","def_rhs_7")
+    )
     
   ),
   
@@ -236,7 +275,50 @@ server = function(input, output, session) {
   output$test = renderDataTable({
     cal_yr_list = input$v5[1]:input$v5[2]
     if(input$v1 == 'def_ind'){
-      
+      filterRows = 1:nrow(def_indiv)
+      ## Make "Additional" Filters by Making Changes to Master ##
+      if(input$num_add == 1){
+        adds = c(input$def_add1)
+        eqs = c(input$def_eq_1)
+        rhss = c(input$def_rhs_1)
+        filterRows = addFilter(def_indiv,1,adds,eqs,rhss)
+      }
+      else if(input$num_add == 2){
+        adds = c(input$def_add1,input$def_add2)
+        eqs = c(input$def_eq_1,input$def_eq_2)
+        rhss = c(input$def_rhs_1,input$def_rhs_2)
+        filterRows = addFilter(def_indiv,2,adds,eqs,rhss)
+      }
+      else if(input$num_add == 3){
+        adds = c(input$def_add1,input$def_add2,input$def_add3)
+        eqs = c(input$def_eq_1,input$def_eq_2,input$def_eq_3)
+        rhss = c(input$def_rhs_1,input$def_rhs_2,input$def_rhs_3)
+        filterRows = addFilter(def_indiv,3,adds,eqs,rhss)
+      }
+      else if(input$num_add == 4){
+        adds = c(input$def_add1,input$def_add2,input$def_add3,input$def_add4)
+        eqs = c(input$def_eq_1,input$def_eq_2,input$def_eq_3,input$def_eq_4)
+        rhss = c(input$def_rhs_1,input$def_rhs_2,input$def_rhs_3,input$def_rhs_4)
+        filterRows = addFilter(def_indiv,4,adds,eqs,rhss)
+      }
+      else if(input$num_add == 5){
+        adds = c(input$def_add1,input$def_add2,input$def_add3,input$def_add4,input$def_add5)
+        eqs = c(input$def_eq_1,input$def_eq_2,input$def_eq_3,input$def_eq_4,input$def_eq_5)
+        rhss = c(input$def_rhs_1,input$def_rhs_2,input$def_rhs_3,input$def_rhs_4,input$def_rhs_5)
+        filterRows = addFilter(def_indiv,5,adds,eqs,rhss)
+      }
+      else if(input$num_add == 6){
+        adds = c(input$def_add1,input$def_add2,input$def_add3,input$def_add4,input$def_add5,input$def_add6)
+        eqs = c(input$def_eq_1,input$def_eq_2,input$def_eq_3,input$def_eq_4,input$def_eq_5,input$def_eq_6)
+        rhss = c(input$def_rhs_1,input$def_rhs_2,input$def_rhs_3,input$def_rhs_4,input$def_rhs_5,input$def_rhs_6)
+        filterRows = addFilter(def_indiv,6,adds,eqs,rhss)
+      }
+      else if(input$num_add == 7){
+        adds = c(input$def_add1,input$def_add2,input$def_add3,input$def_add4,input$def_add5,input$def_add6,input$def_add7)
+        eqs = c(input$def_eq_1,input$def_eq_2,input$def_eq_3,input$def_eq_4,input$def_eq_5,input$def_eq_6,input$def_eq_7)
+        rhss = c(input$def_rhs_1,input$def_rhs_2,input$def_rhs_3,input$def_rhs_4,input$def_rhs_5,input$def_rhs_6,input$def_rhs_7)
+        filterRows = addFilter(def_indiv,7,adds,eqs,rhss)
+      }
       def_pos_list = vector()
       for(name in def_pos_choices){
         if(name %in% input$pos_def){
@@ -254,14 +336,24 @@ server = function(input, output, session) {
       ## Use this if statement to decide which rows and columns get printed in the table
       ## Use this if statement to decide which rows and columns get printed in the table
       if(length(def_pos_list) > 0 & length(def_year_list) > 0){
-        rows = which(def_indiv$Pos %in% def_pos_list & 
-                       def_indiv$Class %in% def_year_list &
-                       def_indiv$Year %in% cal_yr_list 
+        rows = which(def_indiv$PlayerPosition %in% def_pos_list & 
+                       def_indiv$PlayerYear %in% def_year_list &
+                       def_indiv$calYear %in% cal_yr_list 
                        )  
-        # If we want consecutive pattern
-        if(input$v2 == 'cons'){
-          def_indiv[rows,]
-        }  else {
+        rows = intersect(rows,filterRows)
+        # If we want sums
+        if (input$sums == 'y'){
+          a1 = def_indiv[rows,] %>%
+            arrange(Name,PlayerPosition,calYear) %>%
+            mutate(calYear = as.character(calYear)) %>%
+            group_by(Name,PlayerPosition) %>%
+            mutate(yearNumbers = paste0(calYear,collapse = ', '))
+          
+          a1 %>%
+            group_by(Name,PlayerPosition,yearNumbers) %>%
+            summarise_if(is.numeric, sum, na.rm = TRUE)
+          
+        } else {
           def_indiv[rows,]
         }
       }
