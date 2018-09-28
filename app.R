@@ -117,32 +117,6 @@ ui = fluidPage(
                 "Defense (Individual Season)" = "def_ind",
                 "Defense (Team)" = "def_team")),
   
-  ## IF offensive individual, choose OFFENSIVE position ##
-  conditionalPanel(
-    condition = "input.v1 == 'off_ind'",
-    fluidRow(column(width = 5, off_pos_box)),
-    checkboxInput('all_off','All/None',value = FALSE)),
-  
-  ## IF defensive individual, choose DEFENSIVE position ##
-  conditionalPanel(
-    condition = "input.v1 == 'def_ind'",
-    fluidRow(column(width = 5, def_pos_box)),
-    checkboxInput('all_def','All/None',value = FALSE)),
-  
-  ## IF Offensive individual, choose academic year ##
-  conditionalPanel(
-    condition = "input.v1 == 'off_ind'",
-    checkboxGroupInput("v6", "Academic Year:",
-                       choices = off_academic_yr_choices),
-    checkboxInput('off_yr','All/None',value = FALSE)),
-  
-  ## IF Defensive individual, choose academic year ##
-  conditionalPanel(
-    condition = "input.v1 == 'def_ind'",
-    checkboxGroupInput("Def_Ac_Year", "Academic Year:",
-                       choices = def_academic_yr_choices),
-    checkboxInput('def_yr','All/None',value = FALSE)),
-  
   ## Are we wanting consecutive or no?
   #selectInput("v2", "Consecutive or stand-alone:",
   #            c("Stand-Alone" = "alone",
@@ -153,8 +127,11 @@ ui = fluidPage(
               c("No" = 'n',"Yes" = 'y')),
   
   ## Choose between rushing, passing, recieving, etc...
-  selectInput("v7", "Area of Game:",
-                       choices = game_area_choices),
+  conditionalPanel(
+    condition = "input.v1 != 'def_ind'",
+    selectInput("v7", "Area of Game:",
+                       choices = game_area_choices)
+    ),
   
   ## Choose between home and away
   conditionalPanel(
@@ -227,6 +204,32 @@ ui = fluidPage(
     )
     
   ),
+  
+  ## IF offensive individual, choose OFFENSIVE position ##
+  conditionalPanel(
+    condition = "input.v1 == 'off_ind'",
+    fluidRow(column(width = 5, off_pos_box)),
+    checkboxInput('all_off','All/None',value = FALSE)),
+  
+  ## IF defensive individual, choose DEFENSIVE position ##
+  conditionalPanel(
+    condition = "input.v1 == 'def_ind'",
+    fluidRow(column(width = 5, def_pos_box)),
+    checkboxInput('all_def','All/None',value = FALSE)),
+  
+  ## IF Offensive individual, choose academic year ##
+  conditionalPanel(
+    condition = "input.v1 == 'off_ind'",
+    checkboxGroupInput("v6", "Academic Year:",
+                       choices = off_academic_yr_choices),
+    checkboxInput('off_yr','All/None',value = FALSE)),
+  
+  ## IF Defensive individual, choose academic year ##
+  conditionalPanel(
+    condition = "input.v1 == 'def_ind'",
+    checkboxGroupInput("Def_Ac_Year", "Academic Year:",
+                       choices = def_academic_yr_choices),
+    checkboxInput('def_yr','All/None',value = FALSE)),
   
   #headerPanel('_________________'),
   

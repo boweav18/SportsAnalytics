@@ -49,16 +49,16 @@ names(def2_namesformatted)[1]<-"PlayerYear"
 names(def2_namesformatted)[2]<-"PlayerPosition"
 names(def2_namesformatted)[3]<-"Name"
 
-colnames(def2_namesformatted) = c('PlayerYear','PlayerPosition','Name','calYear','Games','SoloTackles','AsstTackles','TotalTackles',
+colnames(def1) = c('PlayerYear','PlayerPosition','Name','calYear','Games','SoloTackles','AsstTackles','TotalTackles',
                                   'TacklesForLoss','TFL_Yds','Sacks','Sack_Yds','Int','Int_Yds','IntTD','PassBreakUps','QBHurries',
                                   'FumbleRecov','FumbleRecov_Yds','ForcedFumbles','BlockedKicks','Safety','TotalCheck','Diff',
                                   'PDF','Tkls/Gm','Tm Rank','PDF_1')
 
-def2_namesformatted = def2_namesformatted %>%
+def1 = def1 %>%
   mutate(`Tkls/Gm` = TotalTackles/Games)
-def2_namesformatted = def2_namesformatted[,c(1:22,26,23,24,25,27,28)]
-def2_namesformatted[which(is.na(def2_namesformatted$PlayerYear)),1] = 'Unknown'
-def2_namesformatted[which(is.na(def2_namesformatted$PlayerPosition)),2] = 'Unknown'
+def1 = def1[,c(1:22,26,23,24,25,27,28)]
+def1[which(is.na(def1$PlayerYear)),1] = 'Unknown'
+def1[which(is.na(def1$PlayerPosition)),2] = 'Unknown'
 
-write.csv(def2_namesformatted,file = "def_ind_reformatted.csv")
+write.csv(def1,file = "def_ind_reformatted.csv")
 
