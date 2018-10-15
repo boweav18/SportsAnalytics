@@ -5,8 +5,9 @@ account: wfuanalytics
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 414290
-bundleId: 1589803
+bundleId: 1642184
 url: https://wfuanalytics.shinyapps.io/sportsanalytics/
-when: 1537197439.36203
+when: 1539532726.71113
 asMultiple: FALSE
 asStatic: FALSE
+ignoredFiles: .RData|def_player_season.R|Master1Test.csv|masterbigTEST.R
