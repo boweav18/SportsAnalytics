@@ -32,7 +32,28 @@ master = mastertotal
 #colnames(All_Results) = c('calYear',"W/L","Opponent",'OppConf','WFU_Score','OPP_Score','Score_Margin')
 
 def_indiv = read_csv("def_ind_reformatted.csv")[-1]
-Wake_TeamStats <- read_excel("TeamStats.xlsx", sheet = "Wake")
+Wake_TeamStats <- read_excel("TeamStats.xlsx", 
+                        sheet = "Wake", col_types = c("numeric", 
+                                                      "text", "text", "text", "numeric", 
+                                                      "text", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric"))
 colnames(Wake_TeamStats) = paste('wake_',c('calYear','date','opponent','opponent_2','game_number','WinLoss',
                                            'RushAtt','RushYds','RushTD','RushLng','ReceiveRec','ReceiveYds',
                                            'ReceiveTD','ReceiveLng','PassCmp','PassAtt','PassInt','PassYds',
@@ -45,7 +66,30 @@ colnames(Wake_TeamStats) = paste('wake_',c('calYear','date','opponent','opponent
                                            'PuntAvg',	'PuntLng',	'PuntBlkd',	'PuntTB',	'PuntFC',	'Punt50Plus',	'PuntInside20',
                                            'FGAtt',	'FGMade',	'FGLng',	'FGBlkd',	'KOAtt',	'KOYds',	"KOAvg",
                                            'KOTB','KOOB','TotOff2Gms','RushYds2Gms','RushYds3Gms'),sep = '')
-Opp_TeamStats <- read_excel("TeamStats.xlsx", sheet = "Opp")
+Opp_TeamStats <- read_excel("TeamStats.xlsx", 
+                        sheet = "Opp", col_types = c("numeric", 
+                                                     "text", "text", "text", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric"))
 colnames(Opp_TeamStats) = paste('opp_',c('calYear','date','opponent','opponent_2',
                                          'RushAtt','RushYds','RushTD','RushLng','ReceiveRec','ReceiveYds',
                                          'ReceiveTD','ReceiveLng','PassCmp','PassAtt','PassInt','PassYds',
@@ -59,6 +103,7 @@ colnames(Opp_TeamStats) = paste('opp_',c('calYear','date','opponent','opponent_2
                                          'FGAtt',	'FGMade',	'FGLng',	'FGBlkd',	'KOAtt',	'KOYds',	"KOAvg",
                                          'KOTB','KOOB','YPC','YPA','TOPlays','YPP'),sep = '')
 team = Wake_TeamStats %>% inner_join(Opp_TeamStats, by = c('wake_opponent_2' = 'opp_opponent_2', 'wake_calYear' = 'opp_calYear'))
+
 
 #### SET UP CHOICES ####
 off_pos_choices = unique(master$PlayerPosition)
