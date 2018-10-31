@@ -7,7 +7,7 @@
 #### Dependencies ####
 # uncomment when publishing
 #source('masterbigTEST(1).R')
-#setwd("C:/Users/Huma/Documents/WFU/Analytics Team/app")
+#setwd("C:/Users/andrb/OneDrive/Documents/SportsAnalytics")
 library(shiny)
 library(tidyverse)
 library(purrr)
@@ -33,27 +33,27 @@ master = mastertotal
 
 def_indiv = read_csv("def_ind_reformatted.csv")[-1]
 Wake_TeamStats <- read_excel("TeamStats.xlsx", 
-                             sheet = "Wake", col_types = c("numeric", 
-                                                           "text", "text", "text", "numeric", 
-                                                           "text", "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric"))
+                        sheet = "Wake", col_types = c("numeric", 
+                                                      "text", "text", "text", "numeric", 
+                                                      "text", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric", 
+                                                      "numeric", "numeric", "numeric"))
 colnames(Wake_TeamStats) = paste('wake_',c('calYear','date','opponent','opponent_2','game_number','WinLoss',
                                            'RushAtt','RushYds','RushTD','RushLng','ReceiveRec','ReceiveYds',
                                            'ReceiveTD','ReceiveLng','PassCmp','PassAtt','PassInt','PassYds',
@@ -67,29 +67,29 @@ colnames(Wake_TeamStats) = paste('wake_',c('calYear','date','opponent','opponent
                                            'FGAtt',	'FGMade',	'FGLng',	'FGBlkd',	'KOAtt',	'KOYds',	"KOAvg",
                                            'KOTB','KOOB','TotOff2Gms','RushYds2Gms','RushYds3Gms'),sep = '')
 Opp_TeamStats <- read_excel("TeamStats.xlsx", 
-                            sheet = "Opp", col_types = c("numeric", 
-                                                         "text", "text", "text", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric"))
+                        sheet = "Opp", col_types = c("numeric", 
+                                                     "text", "text", "text", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric", 
+                                                     "numeric", "numeric", "numeric"))
 colnames(Opp_TeamStats) = paste('opp_',c('calYear','date','opponent','opponent_2',
                                          'RushAtt','RushYds','RushTD','RushLng','ReceiveRec','ReceiveYds',
                                          'ReceiveTD','ReceiveLng','PassCmp','PassAtt','PassInt','PassYds',
@@ -103,6 +103,7 @@ colnames(Opp_TeamStats) = paste('opp_',c('calYear','date','opponent','opponent_2
                                          'FGAtt',	'FGMade',	'FGLng',	'FGBlkd',	'KOAtt',	'KOYds',	"KOAvg",
                                          'KOTB','KOOB','YPC','YPA','TOPlays','YPP'),sep = '')
 team = Wake_TeamStats %>% inner_join(Opp_TeamStats, by = c('wake_opponent_2' = 'opp_opponent_2', 'wake_calYear' = 'opp_calYear'))
+
 
 #### SET UP CHOICES ####
 off_pos_choices = unique(master$PlayerPosition)
@@ -365,18 +366,6 @@ ui = fluidPage(
               value = c(minimum_year,maximum_year),
               sep = ''),
   
-  
-  ## Consecutive years or games?
-  conditionalPanel(
-    condition = "input.v1 == 'team'", selectInput("cons1", "Choose Year or Games:",
-              c("Year",
-                "Game"))),
-  
-  ##Number of consecutive ____
-  conditionalPanel(
-    condition = "input.v1 == 'team'", selectInput("cons2", "n:", 
-              c("NULL", "Max", "1", "2", "3", "4", "5", "6", "7", "8", "9"))),
-  
   tagList(
     singleton(tags$head(tags$script(src='//cdn.datatables.net/fixedheader/2.1.2/js/dataTables.fixedHeader.min.js',type='text/javascript'))),
     singleton(tags$head(tags$link(href='//cdn.datatables.net/fixedheader/2.1.2/css/dataTables.fixedHeader.css',rel='stylesheet',type='text/css')))
@@ -628,259 +617,11 @@ server = function(input, output, session) {
         rhss = c(input$team_rhs_1,input$team_rhs_2,input$team_rhs_3,input$team_rhs_4,input$team_rhs_5,input$team_rhs_6,input$team_rhs_7)
         filterRows = addFilter(team,7,adds,eqs,rhss)
       }
-
+      
       # identify which rows to keep based on CALENDAR YEAR
       rows = intersect(rows,which(team$wake_calYear %in% cal_yr_list))
       rows = intersect(rows,filterRows)
-      
-      #Consecutive Years
-      if(input$cons1 == 'Year'){
-        split <- split(team$wake_calYear[rows], cumsum(c(1, diff(team$wake_calYear[rows]) != 1)))
-        
-        if(input$cons2 == 'Max'){
-        maxlisty <- vector("double")
-        for (i in 1:length(split)){
-          conslengthsy <- vector("double")
-          for (p in 1:length(split)){
-            conslengthsy <- append(conslengthsy, length(split[[p]]))
-            
-          }
-          if (length(split[[i]]) == max(conslengthsy)){
-            maxlisty <- append(maxlisty, split[[i]])
-          }
-        }
-        rows = intersect(rows,which(team$wake_calYear %in% maxlisty))
-        }
-        
-        else if(input$cons2 == 1){
-          specific1y <- vector("double")
-          for (i in 1:length(split)){
-            if (length(split[[i]]) == 1){
-              specific1y <- append(specific1y, split[[i]])
-            }
-          }
-          rows = intersect(rows,which(team$wake_calYear %in% specific1y))
-        }
-        
-        else if(input$cons2 == 2){
-          specific2y <- vector("double")
-          for (i in 1:length(split)){
-            if (length(split[[i]]) == 2){
-              specific2y <- append(specific2y, split[[i]])
-            }
-          }
-          rows = intersect(rows,which(team$wake_calYear %in% specific2y))
-          
-        }
-        
-        else if(input$cons2 == 3){
-          specific3y <- vector("double")
-          for (i in 1:length(split)){
-            if (length(split[[i]]) == 3){
-              specific3y <- append(specific3y, split[[i]])
-            }
-          }
-          rows = intersect(rows,which(team$wake_calYear %in% specific3y))
-          
-        }
-        
-        else if(input$cons2 == 4){
-          specific4y <- vector("double")
-          for (i in 1:length(split)){
-            if (length(split[[i]]) == 4){
-              specific4y <- append(specific4y, split[[i]])
-            }
-          }
-          rows = intersect(rows,which(team$wake_calYear %in% specific4y))
-          
-        }
-        
-        else if(input$cons2 == 5){
-          specific5y <- vector("double")
-          for (i in 1:length(split)){
-            if (length(split[[i]]) == 5){
-              specific5y <- append(specific5y, split[[i]])
-            }
-          }
-          rows = intersect(rows,which(team$wake_calYear %in% specific5y))
-          
-        }
-        
-        else if(input$cons2 == 6){
-          specific6y <- vector("double")
-          for (i in 1:length(split)){
-            if (length(split[[i]]) == 6){
-              specific6y <- append(specific6y, split[[i]])
-            }
-          }
-          rows = intersect(rows,which(team$wake_calYear %in% specific6y))
-          
-        }
-        
-        else if(input$cons2 == 7){
-          specific7y <- vector("double")
-          for (i in 1:length(split)){
-            if (length(split[[i]]) == 7){
-              specific7y <- append(specific7y, split[[i]])
-            }
-          }
-          rows = intersect(rows,which(team$wake_calYear %in% specific7y))
-          
-        }
-        
-        else if(input$cons2 == 8){
-          specific8y <- vector("double")
-          for (i in 1:length(split)){
-            if (length(split[[i]]) == 8){
-              specific8y <- append(specific8y, split[[i]])
-            }
-          }
-          rows = intersect(rows,which(team$wake_calYear %in% specific8y))
-          
-        }
-        
-        else if(input$cons2 == 9){
-          specific9y <- vector("double")
-          for (i in 1:length(split)){
-            if (length(split[[i]]) == 9){
-              specific9y <- append(specific9y, split[[i]])
-            }
-          }
-          rows = intersect(rows,which(team$wake_calYear %in% specific9y))
-          
-        }
-        
-        else if(input$cons2 == 'NULL'){
-          rows = rows
-        }
-        
-      }
-      
-      #Consecutive Games
-      if(input$cons1 == 'Game'){
-        split <- split(team$wake_game_number[rows], cumsum(c(1, diff(team$wake_game_number[rows]) != 1)))
-        
-        if(input$cons2 == 'Max'){
-        maxlistg <- vector("double")
-        for (i in 1:length(split)){
-          conslengthsg <- vector("double")
-          for (p in 1:length(split)){
-            conslengthsg <- append(conslengthsg, length(split[[p]]))
-            
-          }
-          if (length(split[[i]]) == max(conslengthsg)){
-            maxlistg <- append(maxlistg, split[[i]])
-          }
-        }
-        rows = intersect(rows,which(team$wake_game_number %in% maxlistg))
-        }
-        
-        else if(input$cons2 == 1){
-          specific1g <- vector("double")
-          for (i in 1:length(split)){
-            if (length(split[[i]]) == 1){
-              specific1g <- append(specific1g, split[[i]])
-            }
-          }
-          rows = intersect(rows,which(team$wake_game_number %in% specific1g))
-        }
-        
-        else if(input$cons2 == 2){
-          specific2g <- vector("double")
-          for (i in 1:length(split)){
-            if (length(split[[i]]) == 2){
-              specific2g <- append(specific2g, split[[i]])
-            }
-          }
-          rows = intersect(rows,which(team$wake_game_number %in% specific2g))
-          
-        }
-        
-        else if(input$cons2 == 3){
-          specific3g <- vector("double")
-          for (i in 1:length(split)){
-            if (length(split[[i]]) == 3){
-              specific3g <- append(specific3g, split[[i]])
-            }
-          }
-          rows = intersect(rows,which(team$wake_game_number %in% specific3g))
-          
-        }
-        
-        else if(input$cons2 == 4){
-          specific4g <- vector("double")
-          for (i in 1:length(split)){
-            if (length(split[[i]]) == 4){
-              specific4g <- append(specific4g, split[[i]])
-            }
-          }
-          rows = intersect(rows,which(team$wake_game_number %in% specific4g))
-          
-        }
-        
-        else if(input$cons2 == 5){
-          specific5g <- vector("double")
-          for (i in 1:length(split)){
-            if (length(split[[i]]) == 5){
-              specific5g <- append(specific5g, split[[i]])
-            }
-          }
-          rows = intersect(rows,which(team$wake_game_number %in% specific5g))
-          
-        }
-        
-        else if(input$cons2 == 6){
-          specific6g <- vector("double")
-          for (i in 1:length(split)){
-            if (length(split[[i]]) == 6){
-              specific6g <- append(specific6g, split[[i]])
-            }
-          }
-          rows = intersect(rows,which(team$wake_game_number %in% specific6g))
-          
-        }
-        
-        else if(input$cons2 == 7){
-          specific7g <- vector("double")
-          for (i in 1:length(split)){
-            if (length(split[[i]]) == 7){
-              specific7g <- append(specific7g, split[[i]])
-            }
-          }
-          rows = intersect(rows,which(team$wake_game_number %in% specific7g))
-          
-        }
-        
-        else if(input$cons2 == 8){
-          specific8g <- vector("double")
-          for (i in 1:length(split)){
-            if (length(split[[i]]) == 8){
-              specific8g <- append(specific8g, split[[i]])
-            }
-          }
-          rows = intersect(rows,which(team$wake_game_number %in% specific8g))
-          
-        }
-        
-        else if(input$cons2 == 9){
-          specific9g <- vector("double")
-          for (i in 1:length(split)){
-            if (length(split[[i]]) == 9){
-              specific9g <- append(specific9g, split[[i]])
-            }
-          }
-          rows = intersect(rows,which(team$wake_game_number %in% specific9g))
-          
-        }
-        
-        else if(input$cons2 == 'NULL'){
-          rows = rows
-        }
-        
-      }  
-    
       team[rows,cols]
-      
     }
     
     
