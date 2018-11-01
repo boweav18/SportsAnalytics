@@ -32,77 +32,14 @@ master = mastertotal
 #colnames(All_Results) = c('calYear',"W/L","Opponent",'OppConf','WFU_Score','OPP_Score','Score_Margin')
 
 def_indiv = read_csv("def_ind_reformatted.csv")[-1]
-Wake_TeamStats <- read_excel("TeamStats.xlsx", 
-                             sheet = "Wake", col_types = c("numeric", 
-                                                           "text", "text", "text", "numeric", 
-                                                           "text", "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric", 
-                                                           "numeric", "numeric", "numeric"))
-colnames(Wake_TeamStats) = paste('wake_',c('calYear','date','opponent','opponent_2','game_number','WinLoss',
-                                           'RushAtt','RushYds','RushTD','RushLng','ReceiveRec','ReceiveYds',
-                                           'ReceiveTD','ReceiveLng','PassCmp','PassAtt','PassInt','PassYds',
-                                           'PassTD','PassLng','KORet','KORetYds','KORetTD','KORetLng','PRRet',
-                                           'PRYds',	'PRTD',	'PRLng',	'TotOffYds',	'TotOffPlays',	'TotFirstDowns',
-                                           'TotFirstDownRush',	'TotFirstDownPass',	'TotFirstDownPen',	'TackleSolo',
-                                           'TackleAst',	'TackleTot',	'TFL',	'TFLYards',	'Sacks',	'SackYds',	'FumbleForced',
-                                           'FumbleRec',	'FumbleYds',	'Int',	'IntYds',	'QBH',	'Breakups',	'BlkKick',
-                                           'PATMade',	'PATAtt',	'Run',	'Rcv',	'Saf',	'Points',	'PuntAtt',	'PuntYds',
-                                           'PuntAvg',	'PuntLng',	'PuntBlkd',	'PuntTB',	'PuntFC',	'Punt50Plus',	'PuntInside20',
-                                           'FGAtt',	'FGMade',	'FGLng',	'FGBlkd',	'KOAtt',	'KOYds',	"KOAvg",
-                                           'KOTB','KOOB','TotOff2Gms','RushYds2Gms','RushYds3Gms'),sep = '')
-Opp_TeamStats <- read_excel("TeamStats.xlsx", 
-                            sheet = "Opp", col_types = c("numeric", 
-                                                         "text", "text", "text", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric", 
-                                                         "numeric", "numeric", "numeric"))
-colnames(Opp_TeamStats) = paste('opp_',c('calYear','date','opponent','opponent_2',
-                                         'RushAtt','RushYds','RushTD','RushLng','ReceiveRec','ReceiveYds',
-                                         'ReceiveTD','ReceiveLng','PassCmp','PassAtt','PassInt','PassYds',
-                                         'PassTD','PassLng','KORet','KORetYds','KORetTD','KORetLng','PRRet',
-                                         'PRYds',	'PRTD',	'PRLng',	'TotOffYds',	'TotFirstDowns',
-                                         'TotFirstDownRush',	'TotFirstDownPass',	'TotFirstDownPen',	'TackleSolo',
-                                         'TackleAst',	'TackleTot',	'TFL',	'TFLYards',	'Sacks',	'SackYds',	'FumbleForced',
-                                         'FumbleRec',	'FumbleYds',	'Int',	'IntYds',	'QBH',	'Breakups',	'BlkKick',
-                                         'PATAtt','PATMade',	'Run',	'Rcv',	'Saf',	'Points',	'PuntAtt',	'PuntYds',
-                                         'PuntAvg',	'PuntLng',	'PuntBlkd',	'PuntTB',	'PuntFC',	'Punt50Plus',	'PuntInside20',
-                                         'FGAtt',	'FGMade',	'FGLng',	'FGBlkd',	'KOAtt',	'KOYds',	"KOAvg",
-                                         'KOTB','KOOB','YPC','YPA','TOPlays','YPP'),sep = '')
-team = Wake_TeamStats %>% inner_join(Opp_TeamStats, by = c('wake_opponent_2' = 'opp_opponent_2', 'wake_calYear' = 'opp_calYear'))
+
+team = read_csv("Team.csv")[,-1]
+
+master = master %>% full_join(team,by = c('Opponent' = 'Opponent','calYear' = 'Year'))
+master = master[,c(1:7,190,182,10:38)]
+colnames(master)[8:9] = c('HomeAway','WinLoss')
+  
+
 
 #### SET UP CHOICES ####
 off_pos_choices = unique(master$PlayerPosition)
@@ -116,6 +53,7 @@ game_area_choices = c('All Areas','Rushing','Passing','Recieving','Punting','Kic
 team_choices = c('Rush Offense','Receiving Offense','Pass Offense','Kickoff Return',
                  'Punt Return','Total Offense','Defense','Place Kicking','Punting',
                  'Kickoffs','Other Measures')
+info_choices = c('Scoring','Matchup Info','Coach Info','Game Details','Other')
 
 
 
@@ -184,7 +122,7 @@ def_pos_box = list(tags$div(align = 'left',
                                                inline   = FALSE)))
 
 maximum_year = as.numeric(format(Sys.Date(), "%Y"))
-minimum_year = as.numeric(min(c(master$calYear,def_indiv$calYear,team$wake_calYear)))
+minimum_year = as.numeric(min(c(master$calYear,def_indiv$calYear,team$Year)))
 
 
 #### UI ####
@@ -214,7 +152,9 @@ ui = fluidPage(
       column(3, checkboxGroupInput("wake_team_choices", "Wake:",
                                    choices = team_choices)),
       column(3, checkboxGroupInput("opp_team_choices", "Opponent:",
-                                   choices = team_choices))
+                                   choices = team_choices)),
+      column(3, checkboxGroupInput("game_info",'Game Information:',
+                                   choices = info_choices))
     )
   ),
   
@@ -354,7 +294,7 @@ ui = fluidPage(
   ## Are we wanting sums of columns or no?
   conditionalPanel(
     condition = "input.v1 != 'team'",
-    selectInput("sums",'Sum Columns for Each Player?',
+    selectInput("sums",'Aggregate Over Games Within a Year?',
                 c("No" = 'n',"Yes" = 'y'))
   ),
   
@@ -368,13 +308,13 @@ ui = fluidPage(
   
   ## Consecutive years or games?
   conditionalPanel(
-    condition = "input.v1 == 'team'", selectInput("cons1", "Choose Year or Games:",
-              c("Year",
+    condition = "input.v1 == 'team'", selectInput("cons1", "Choose No Aggregation or Game Aggregation:",
+              c("None",
                 "Game"))),
   
   ##Number of consecutive ____
   conditionalPanel(
-    condition = "input.v1 == 'team'", selectInput("cons2", "n:", 
+    condition = "input.v1 == 'team'", selectInput("cons2", "Number of Games to Aggregate:", 
               c("NULL", "Max", "1", "2", "3", "4", "5", "6", "7", "8", "9"))),
   
   tagList(
@@ -514,74 +454,90 @@ server = function(input, output, session) {
     
     ## IF TEAM ##
     else if(input$v1 == 'team'){
-      cols = c(1:3,5,6,55,126)
+      cols = c(1:5,147,154)
       rows = 1:nrow(team)
       if('Rush Offense' %in% input$wake_team_choices){
-        cols = c(cols,7:10)
+        cols = c(cols,6:9)
       }
       if('Receiving Offense' %in% input$wake_team_choices){
-        cols = c(cols,11:14)
+        cols = c(cols,10:13)
       }
       if('Pass Offense' %in% input$wake_team_choices){
-        cols = c(cols,15:20)
+        cols = c(cols,14:19)
       }
       if('Kickoff Return' %in% input$wake_team_choices){
-        cols = c(cols,21:24)
+        cols = c(cols,20:23)
       }
       if('Punt Return' %in% input$wake_team_choices){
-        cols = c(cols,25:28)
+        cols = c(cols,24:27)
       }
       if('Total Offense' %in% input$wake_team_choices){
-        cols = c(cols,29:34)
+        cols = c(cols,28:33)
       }
       if('Defense' %in% input$wake_team_choices){
-        cols = c(cols,35:48)
+        cols = c(cols,34:47)
       }
       if('Place Kicking' %in% input$wake_team_choices){
-        cols = c(cols,49:51,65:68)
+        cols = c(cols,48:50,64:67)
       }
       if('Punting' %in% input$wake_team_choices){
-        cols = c(cols,56:64)
+        cols = c(cols,55:63)
       }
       if('Kickoffs' %in% input$wake_team_choices){
-        cols = c(cols,69:73)
+        cols = c(cols,68:72)
       }
       if('Other Measures' %in% input$wake_team_choices){
-        cols = c(cols,74:76)
+        cols = c(cols,73:75.51:54)
       }
       #-------
       if('Rush Offense' %in% input$opp_team_choices){
-        cols = c(cols,79:82)
+        cols = c(cols,76:79)
       }
       if('Receiving Offense' %in% input$opp_team_choices){
-        cols = c(cols,83:86)
+        cols = c(cols,80:83)
       }
       if('Pass Offense' %in% input$opp_team_choices){
-        cols = c(cols,87:92)
+        cols = c(cols,84:89)
       }
       if('Kickoff Return' %in% input$opp_team_choices){
-        cols = c(cols,93:96)
+        cols = c(cols,90:93)
       }
       if('Punt Return' %in% input$opp_team_choices){
-        cols = c(cols,97:100)
+        cols = c(cols,94:97)
       }
       if('Total Offense' %in% input$opp_team_choices){
-        cols = c(cols,101:105)
+        cols = c(cols,98:102)
       }
       if('Defense' %in% input$opp_team_choices){
-        cols = c(cols,106:119)
+        cols = c(cols,103:116)
       }
       if('Place Kicking' %in% input$opp_team_choices){
-        cols = c(cols,120:122,136:139)
+        cols = c(cols,117:119,133:136)
       }
       if('Punting' %in% input$opp_team_choices){
-        cols = c(cols,127:135)
+        cols = c(cols,124:132)
       }
       if('Kickoffs' %in% input$opp_team_choices){
-        cols = c(cols,140:144)
+        cols = c(cols,137:141)
       }
       if('Other Measures' %in% input$opp_team_choices){
-        cols = c(cols,145:148)
+        cols = c(cols,142:145,120:123)
+      }
+      #-------
+      if('Scoring' %in% input$game_info){
+        cols = c(cols,146:150)
+      }
+      if('Matchup Info' %in% input$game_info){
+        cols = c(cols,153,155:164)
+      }
+      if('Coach Info' %in% input$game_info){
+        cols = c(cols,167:169)
+      }
+      if('Game Details' %in% input$game_info){
+        cols = c(cols,174:195,198:204,237)
+      }
+      if('Other' %in% input$game_info){
+        cols = c(cols,151:152,165:166,169:173,196:197,205:236,238:252)
       }
       
       filterRows = 1:nrow(team)
@@ -630,12 +586,12 @@ server = function(input, output, session) {
       }
 
       # identify which rows to keep based on CALENDAR YEAR
-      rows = intersect(rows,which(team$wake_calYear %in% cal_yr_list))
+      rows = intersect(rows,which(team$Year %in% cal_yr_list))
       rows = intersect(rows,filterRows)
       
       #Consecutive Years
       if(input$cons1 == 'Year'){
-        split <- split(team$wake_calYear[rows], cumsum(c(1, diff(team$wake_calYear[rows]) != 1)))
+        split <- split(team$Year[rows], cumsum(c(1, diff(team$Year[rows]) != 1)))
         
         if(input$cons2 == 'Max'){
         maxlisty <- vector("double")
@@ -649,7 +605,7 @@ server = function(input, output, session) {
             maxlisty <- append(maxlisty, split[[i]])
           }
         }
-        rows = intersect(rows,which(team$wake_calYear %in% maxlisty))
+        rows = intersect(rows,which(team$Year %in% maxlisty))
         }
         
         else if(input$cons2 == 1){
@@ -659,7 +615,7 @@ server = function(input, output, session) {
               specific1y <- append(specific1y, split[[i]])
             }
           }
-          rows = intersect(rows,which(team$wake_calYear %in% specific1y))
+          rows = intersect(rows,which(team$Year %in% specific1y))
         }
         
         else if(input$cons2 == 2){
@@ -669,7 +625,7 @@ server = function(input, output, session) {
               specific2y <- append(specific2y, split[[i]])
             }
           }
-          rows = intersect(rows,which(team$wake_calYear %in% specific2y))
+          rows = intersect(rows,which(team$Year %in% specific2y))
           
         }
         
@@ -680,7 +636,7 @@ server = function(input, output, session) {
               specific3y <- append(specific3y, split[[i]])
             }
           }
-          rows = intersect(rows,which(team$wake_calYear %in% specific3y))
+          rows = intersect(rows,which(team$Year %in% specific3y))
           
         }
         
@@ -691,7 +647,7 @@ server = function(input, output, session) {
               specific4y <- append(specific4y, split[[i]])
             }
           }
-          rows = intersect(rows,which(team$wake_calYear %in% specific4y))
+          rows = intersect(rows,which(team$Year %in% specific4y))
           
         }
         
@@ -702,7 +658,7 @@ server = function(input, output, session) {
               specific5y <- append(specific5y, split[[i]])
             }
           }
-          rows = intersect(rows,which(team$wake_calYear %in% specific5y))
+          rows = intersect(rows,which(team$Year %in% specific5y))
           
         }
         
@@ -713,7 +669,7 @@ server = function(input, output, session) {
               specific6y <- append(specific6y, split[[i]])
             }
           }
-          rows = intersect(rows,which(team$wake_calYear %in% specific6y))
+          rows = intersect(rows,which(team$Year %in% specific6y))
           
         }
         
@@ -724,7 +680,7 @@ server = function(input, output, session) {
               specific7y <- append(specific7y, split[[i]])
             }
           }
-          rows = intersect(rows,which(team$wake_calYear %in% specific7y))
+          rows = intersect(rows,which(team$Year %in% specific7y))
           
         }
         
@@ -735,7 +691,7 @@ server = function(input, output, session) {
               specific8y <- append(specific8y, split[[i]])
             }
           }
-          rows = intersect(rows,which(team$wake_calYear %in% specific8y))
+          rows = intersect(rows,which(team$Year %in% specific8y))
           
         }
         
@@ -746,7 +702,7 @@ server = function(input, output, session) {
               specific9y <- append(specific9y, split[[i]])
             }
           }
-          rows = intersect(rows,which(team$wake_calYear %in% specific9y))
+          rows = intersect(rows,which(team$Year %in% specific9y))
           
         }
         
@@ -758,7 +714,7 @@ server = function(input, output, session) {
       
       #Consecutive Games
       if(input$cons1 == 'Game'){
-        split <- split(team$wake_game_number[rows], cumsum(c(1, diff(team$wake_game_number[rows]) != 1)))
+        split <- split(team$GameNumber[rows], cumsum(c(1, diff(team$GameNumber[rows]) != 1)))
         
         if(input$cons2 == 'Max'){
         maxlistg <- vector("double")
@@ -772,7 +728,7 @@ server = function(input, output, session) {
             maxlistg <- append(maxlistg, split[[i]])
           }
         }
-        rows = intersect(rows,which(team$wake_game_number %in% maxlistg))
+        rows = intersect(rows,which(team$GameNumber %in% maxlistg))
         }
         
         else if(input$cons2 == 1){
@@ -782,7 +738,7 @@ server = function(input, output, session) {
               specific1g <- append(specific1g, split[[i]])
             }
           }
-          rows = intersect(rows,which(team$wake_game_number %in% specific1g))
+          rows = intersect(rows,which(team$GameNumber %in% specific1g))
         }
         
         else if(input$cons2 == 2){
@@ -792,7 +748,7 @@ server = function(input, output, session) {
               specific2g <- append(specific2g, split[[i]])
             }
           }
-          rows = intersect(rows,which(team$wake_game_number %in% specific2g))
+          rows = intersect(rows,which(team$GameNumber %in% specific2g))
           
         }
         
@@ -803,7 +759,7 @@ server = function(input, output, session) {
               specific3g <- append(specific3g, split[[i]])
             }
           }
-          rows = intersect(rows,which(team$wake_game_number %in% specific3g))
+          rows = intersect(rows,which(team$GameNumber %in% specific3g))
           
         }
         
@@ -814,7 +770,7 @@ server = function(input, output, session) {
               specific4g <- append(specific4g, split[[i]])
             }
           }
-          rows = intersect(rows,which(team$wake_game_number %in% specific4g))
+          rows = intersect(rows,which(team$GameNumber %in% specific4g))
           
         }
         
@@ -825,7 +781,7 @@ server = function(input, output, session) {
               specific5g <- append(specific5g, split[[i]])
             }
           }
-          rows = intersect(rows,which(team$wake_game_number %in% specific5g))
+          rows = intersect(rows,which(team$GameNumber %in% specific5g))
           
         }
         
@@ -836,7 +792,7 @@ server = function(input, output, session) {
               specific6g <- append(specific6g, split[[i]])
             }
           }
-          rows = intersect(rows,which(team$wake_game_number %in% specific6g))
+          rows = intersect(rows,which(team$GameNumber %in% specific6g))
           
         }
         
@@ -847,7 +803,7 @@ server = function(input, output, session) {
               specific7g <- append(specific7g, split[[i]])
             }
           }
-          rows = intersect(rows,which(team$wake_game_number %in% specific7g))
+          rows = intersect(rows,which(team$GameNumber %in% specific7g))
           
         }
         
@@ -858,7 +814,7 @@ server = function(input, output, session) {
               specific8g <- append(specific8g, split[[i]])
             }
           }
-          rows = intersect(rows,which(team$wake_game_number %in% specific8g))
+          rows = intersect(rows,which(team$GameNumber %in% specific8g))
           
         }
         
@@ -869,7 +825,7 @@ server = function(input, output, session) {
               specific9g <- append(specific9g, split[[i]])
             }
           }
-          rows = intersect(rows,which(team$wake_game_number %in% specific9g))
+          rows = intersect(rows,which(team$GameNumber %in% specific9g))
           
         }
         
@@ -935,13 +891,13 @@ server = function(input, output, session) {
       # Filter on home and away
       home_away_list = NA
       if(input$home_away == 'Home'){
-        home_away_list = "Home"
+        home_away_list = "H"
       }
       else if(input$home_away == 'Away'){
-        home_away_list = "Away"
+        home_away_list = "A"
       }
       else{
-        home_away_list = c("Home","Away")
+        home_away_list = c("H","A")
       }
       
       # Filter on area of game
