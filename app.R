@@ -322,6 +322,23 @@ ui = fluidPage(
     singleton(tags$head(tags$link(href='//cdn.datatables.net/fixedheader/2.1.2/css/dataTables.fixedHeader.css',rel='stylesheet',type='text/css')))
   ), 
   
+  sidebarLayout(
+    sidebarPanel(
+      
+      textInput("addVar", "New attribute definition", "team$df$Value <- team$df$RushYds/team$df$RushTD"),
+      actionButton("addButton", strong("Add!")),
+      width = 10
+    ),
+    
+    mainPanel(
+      verticalLayout(
+        br(),
+        dataTableOutput("master")
+        #Will display histogram of the newly added variables       
+      )
+    )
+  ),
+  
   dataTableOutput('table'),
   downloadButton('downloadData','Download')
 )
@@ -981,6 +998,15 @@ server = function(input, output, session) {
   output$downloadData = downloadHandler(filename = paste(input$v1,'.csv',sep=''),
                                         content = function(file){write.csv(datasetInput(),file,row.names = F)},
                                         contentType = 'text/csv')
+  DA = reactiveValues()
+  DA$off = master
+  DA$def = def_indiv
+  DA$team = team
+  
+  observeEvent(input$addButton, {
+    eval(parse(text=input$addVar))
+  })
+  #two potential reasons why not showing up -- renderDatable (997) not set the same way is in my example. Or, which columns are showed isn't letting "Value" show up
 }
 
 
