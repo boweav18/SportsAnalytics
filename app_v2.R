@@ -39,8 +39,7 @@ master = master %>% full_join(team,by = c('Opponent' = 'Opponent','calYear' = 'Y
 master = master[,c(1:7,190,182,10:38)]
 colnames(master)[8:9] = c('HomeAway','WinLoss')
   
-master$AllPurpYds = rowSums(cbind(master$KOYds,master$PRYds,master$IntYds, 
-                              master$RushYds,master$ReceiveYds),na.rm = T)
+
 
 #### SET UP CHOICES ####
 off_pos_choices = unique(master$PlayerPosition)
@@ -322,6 +321,23 @@ ui = fluidPage(
     singleton(tags$head(tags$script(src='//cdn.datatables.net/fixedheader/2.1.2/js/dataTables.fixedHeader.min.js',type='text/javascript'))),
     singleton(tags$head(tags$link(href='//cdn.datatables.net/fixedheader/2.1.2/css/dataTables.fixedHeader.css',rel='stylesheet',type='text/css')))
   ), 
+  
+  # sidebarLayout(
+  #   sidebarPanel(
+  #     
+  #     textInput("addVar", "New attribute definition", "team$df$Value <- team$df$RushYds/team$df$RushTD"),
+  #     actionButton("addButton", strong("Add!")),
+  #     width = 10
+  #   ),
+  #   
+  #   mainPanel(
+  #     verticalLayout(
+  #       br(),
+  #       dataTableOutput("master")
+  #       #Will display histogram of the newly added variables       
+  #     )
+  #   )
+  # ),
   
   dataTableOutput('table'),
   downloadButton('downloadData','Download')
@@ -917,8 +933,8 @@ server = function(input, output, session) {
         game_area_filter_rows = c(game_area_filter_rows,22:26)
         game_area_list = 22:26
       } else if(input$v7 == 'All Purpose'){
-        game_area_filter_rows = c(game_area_filter_rows,39,10:21,33:38)
-        game_area_list = c(39,10:21,33:38)
+        game_area_filter_rows = c(game_area_filter_rows,10:21,33:38)
+        game_area_list = c(10:21,33:38)
       } else if(input$v7 == 'Kicking'){
         game_area_filter_rows = c(game_area_filter_rows,27:29)
         game_area_list = 27:29
@@ -978,10 +994,19 @@ server = function(input, output, session) {
       }
     }
   })
-  output$table = renderDataTable({datasetInput()},options = list(pageLength = 25))
+  output$table = renderDataTable({datasetInput()},options = list(pageLength = 10))
   output$downloadData = downloadHandler(filename = paste(input$v1,'.csv',sep=''),
                                         content = function(file){write.csv(datasetInput(),file,row.names = F)},
                                         contentType = 'text/csv')
+  DA = reactiveValues()
+  DA$off = master
+  DA$def = def_indiv
+  DA$team = team
+  
+  observeEvent(input$addButton, {
+    eval(parse(text=input$addVar))
+  })
+  #two potential reasons why not showing up -- renderDatable (997) not set the same way is in my example. Or, which columns are showed isn't letting "Value" show up
 }
 
 
