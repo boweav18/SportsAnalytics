@@ -45,9 +45,9 @@ master$AllPurpYds = rowSums(cbind(master$KOYds,master$PRYds,master$IntYds,
 #### SET UP CHOICES ####
 off_pos_choices = unique(master$PlayerPosition)
 #off_pos_choices = sort(off_pos_choices[which(!is.na(off_pos_choices))])
-off_pos_choices = sort(off_pos_choices)
+off_pos_choices = c(sort(off_pos_choices),'Unknown')
 def_pos_choices = unique(sort(def_indiv$PlayerPosition))
-off_academic_yr_choices = unique(sort(master$PlayerYear))
+off_academic_yr_choices = c(unique(sort(master$PlayerYear)),'Unknown')
 def_academic_yr_choices = unique(sort(def_indiv$PlayerYear))
 #off_academic_yr_choices = sort(off_academic_yr_choices[which(!is.na(off_academic_yr_choices))])
 game_area_choices = c('All Areas','Rushing','Passing','Recieving','Punting','Kicking','Interceptions','All Purpose','Punt Return','Kick Return')
@@ -959,6 +959,12 @@ server = function(input, output, session) {
                        master$HomeAway %in% home_away_list &
                        rowSums(is.na(master[,game_area_list])) != length(master[,game_area_list])# exclude if entirely empty
         )
+        if ("Unknown" %in% pos_list){
+          rows = c(rows,which(is.na(master$PlayerPosition)))
+        }
+        if ("Unknown" %in% year_list){
+          rows = c(rows,which(is.na(master$PlayerYear)))
+        }
         rows = intersect(rows,filterRows)
         # If we want sums
         if (input$sums == 'y'){
