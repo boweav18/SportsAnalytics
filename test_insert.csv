@@ -1,0 +1,2 @@
+Name,Opponent,WeekNum,PlayType,PlayerPosition,PlayerYear,calYear,WinLoss,HomeAway,RushAtt,RushYds,RushTD,ReceiveRec,ReceiveYds,ReceiveTD,PassCmp,PassAtt,PassInt,PassYds,PassTD,PassEff,PuntNo,PuntYds,PuntAvg,PuntBLK,PuntLNG,FGM,FGA,FGLP,IntInt,IntYds,IntTD,PRRet,PRYds,PRLP,KORet,KOYds,KOLP,AllPurpYds
+Sebastian,BOSTON COLLEGE,1,Interceptions,C,SO,1950,W,A,NA,NA,NA,NA,NA,NA,NA,1,NA,100,1,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,100

@@ -38,8 +38,9 @@ team = read_csv("Team.csv")[,-1]
 master = master %>% full_join(team,by = c('Opponent' = 'Opponent','calYear' = 'Year'))
 master = master[,c(1:7,190,182,10:38)]
 colnames(master)[8:9] = c('HomeAway','WinLoss')
+master = master[,-c(10,11)] # remove duplicate homeaway and winloss columns
   
-master$AllPurpYds = rowSums(cbind(master$KOYds,master$PRYds,master$IntYds, 
+master$AllPurpYds = rowSums(cbind(master$KORYds,master$PRYds,master$IntYds, 
                               master$RushYds,master$ReceiveYds),na.rm = T)
 
 #### SET UP CHOICES ####
@@ -902,38 +903,38 @@ server = function(input, output, session) {
       }
       
       # Filter on area of game
-      game_area_filter_rows = 1:9
+      gmae_area_filter_cols = 1:9
       game_area_list = vector()
       if(input$v7 == 'Rushing'){
-        game_area_filter_rows = c(game_area_filter_rows,10:12)
+        gmae_area_filter_cols = c(gmae_area_filter_cols,10:12)
         game_area_list = 10:12
       } else if(input$v7 == 'Passing'){
-        game_area_filter_rows = c(game_area_filter_rows,16:21)
+        gmae_area_filter_cols = c(gmae_area_filter_cols,16:21)
         game_area_list = 16:21
       } else if(input$v7 == 'Recieving'){
-        game_area_filter_rows = c(game_area_filter_rows,13:15)
+        gmae_area_filter_cols = c(gmae_area_filter_cols,13:15)
         game_area_list = 13:15
       } else if(input$v7 == 'Punting'){
-        game_area_filter_rows = c(game_area_filter_rows,22:26)
+        gmae_area_filter_cols = c(gmae_area_filter_cols,22:26)
         game_area_list = 22:26
       } else if(input$v7 == 'All Purpose'){
-        game_area_filter_rows = c(game_area_filter_rows,39,10:21,33:38)
-        game_area_list = c(39,10:21,33:38)
+        gmae_area_filter_cols = c(gmae_area_filter_cols,10:21,33:37)
+        game_area_list = c(37,10:21,33:37)
       } else if(input$v7 == 'Kicking'){
-        game_area_filter_rows = c(game_area_filter_rows,27:29)
+        gmae_area_filter_cols = c(gmae_area_filter_cols,27:29)
         game_area_list = 27:29
       } else if(input$v7 == 'Interceptions'){
-        game_area_filter_rows = c(game_area_filter_rows,30:32)
+        gmae_area_filter_cols = c(gmae_area_filter_cols,30:32)
         game_area_list = 30:32
       } else if(input$v7 == 'Punt Return'){
-        game_area_filter_rows = c(game_area_filter_rows,33:35)
+        gmae_area_filter_cols = c(gmae_area_filter_cols,33:35)
         game_area_list = 33:35
       } else if(input$v7 == 'Kick Return'){
-        game_area_filter_rows = c(game_area_filter_rows,36:38)
-        game_area_list = 36:38
+        gmae_area_filter_cols = c(gmae_area_filter_cols,36:37)
+        game_area_list = 36:37
       } else if(input$v7 == 'All Areas'){
-        game_area_filter_rows = c(game_area_filter_rows,10:38)
-        game_area_list = 10:38
+        gmae_area_filter_cols = c(gmae_area_filter_cols,10:37)
+        game_area_list = 10:37
       }
       
       pos_list = vector()
@@ -968,7 +969,7 @@ server = function(input, output, session) {
         rows = intersect(rows,filterRows)
         # If we want sums
         if (input$sums == 'y'){
-          a1 = master[rows,game_area_filter_rows] %>%
+          a1 = master[rows,gmae_area_filter_cols] %>%
             arrange(Name,calYear,WeekNum) %>%
             mutate(WeekNum = as.character(WeekNum)) %>%
             group_by(Name,calYear) %>%
@@ -979,7 +980,7 @@ server = function(input, output, session) {
             summarise_if(is.numeric, sum, na.rm = TRUE)
           
         } else {
-          master[rows,game_area_filter_rows]
+          master[rows,gmae_area_filter_cols]
         }
       }
     }
