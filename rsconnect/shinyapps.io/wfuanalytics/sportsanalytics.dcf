@@ -5,9 +5,9 @@ account: wfuanalytics
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 414290
-bundleId: 1810796
+bundleId: 1885792
 url: https://wfuanalytics.shinyapps.io/sportsanalytics/
-when: 1547316801.22414
+when: 1550620737.05423
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: .gitattributes|.RData|1986-2017edited.xlsx|app_graph.R|app_tryloading1 (1).R|app_v1.R|app_v2.R|app4 (Team Seasons).R|changing dates in gxg.R|def_player_season.R|id assignment.R|masterbigTEST.R|merge alltimefb with individual offense.R
+ignoredFiles: .gitattributes|.RData|1986-2017edited.xlsx|app_graph.R|app_tryloading1 (1).R|app_v1.R|app_v2.R|app_v3.R|app4 (Team Seasons).R|changing dates in gxg.R|def_ind_reformatted.csv|def_player_season.R|googlesheets_testing.R|id assignment.R|IndivDefensiveStats.csv|Master1Test.csv|masterbigTEST.R|mastermerge.csv|mastertotal.csv|merge alltimefb with individual offense.R|Team.csv|TeamStats.xlsx|test_insert.csv

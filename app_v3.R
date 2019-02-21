@@ -12,7 +12,6 @@ library(shiny)
 library(tidyverse)
 library(purrr)
 library(readxl)
-library(googlesheets)
 
 #### SET UP SYSTEM TO DEPLOY APP ####
 # rsconnect::setAccountInfo(name='wfuanalytics',
@@ -21,19 +20,28 @@ library(googlesheets)
 # 
 
 #### IMPORT DATA ####
-#gs_ls() # log in to google sheets and see what we have access to
-master = gs_read(ss=gs_title('mastertotal'))[,-1] # read the sheet into a data frame (exclude first column of indeces)
-def_indiv = gs_read(ss=gs_title('def_ind_reformatted'))[,-1] # read the sheet into a data frame (exclude first column of indeces)
-team = gs_read(ss=gs_title('Team'))[,-1] # read the sheet into a data frame (exclude first column of indeces)
+mastertotal <- read_csv("mastertotal.csv", col_types = cols(X1 = col_skip())) 
+# add home/away and win/loss
+mastertotal$WinLoss = rep(NA,nrow(mastertotal))
+mastertotal$HomeAway = rep("Home",nrow(mastertotal))
+mastertotal = mastertotal[,c(1:7,38,37,8:36)]
+#master <- read_csv("Master1Test.csv", col_types = cols(X1 = col_skip()))
+master = mastertotal
+#All_Results <- read_excel("All-Time FB Results.xlsx", sheet = "All Gms")
+#All_Results = All_Results %>% select(Year,`W/L` ,Opponent2,`Opp Conf`,WFU,Opp,Margin)
+#colnames(All_Results) = c('calYear',"W/L","Opponent",'OppConf','WFU_Score','OPP_Score','Score_Margin')
 
+def_indiv = read_csv("def_ind_reformatted.csv")[-1]
 
-#master = master %>% full_join(team,by = c('Opponent' = 'Opponent','calYear' = 'Year'))
-#master = master[,c(1:7,190,182,10:38)]
-#colnames(master)[8:9] = c('HomeAway','WinLoss')
-#master = master[,-c(10,11)] # remove duplicate homeaway and winloss columns
+team = read_csv("Team.csv")[,-1]
+
+master = master %>% full_join(team,by = c('Opponent' = 'Opponent','calYear' = 'Year'))
+master = master[,c(1:7,190,182,10:38)]
+colnames(master)[8:9] = c('HomeAway','WinLoss')
+master = master[,-c(10,11)] # remove duplicate homeaway and winloss columns
   
-#master$AllPurpYds = rowSums(cbind(master$KORYds,master$PRYds,master$IntYds, 
-#                              master$RushYds,master$ReceiveYds),na.rm = T)
+master$AllPurpYds = rowSums(cbind(master$KORYds,master$PRYds,master$IntYds, 
+                              master$RushYds,master$ReceiveYds),na.rm = T)
 
 #### SET UP CHOICES ####
 off_pos_choices = unique(master$PlayerPosition)
@@ -981,7 +989,6 @@ server = function(input, output, session) {
   output$downloadData = downloadHandler(filename = paste(input$v1,'.csv',sep=''),
                                         content = function(file){write.csv(datasetInput(),file,row.names = F)},
                                         contentType = 'text/csv')
-  
 }
 
 

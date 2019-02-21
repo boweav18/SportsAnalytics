@@ -21,19 +21,9 @@ library(googlesheets)
 # 
 
 #### IMPORT DATA ####
-#gs_ls() # log in to google sheets and see what we have access to
 master = gs_read(ss=gs_title('mastertotal'))[,-1] # read the sheet into a data frame (exclude first column of indeces)
 def_indiv = gs_read(ss=gs_title('def_ind_reformatted'))[,-1] # read the sheet into a data frame (exclude first column of indeces)
 team = gs_read(ss=gs_title('Team'))[,-1] # read the sheet into a data frame (exclude first column of indeces)
-
-
-#master = master %>% full_join(team,by = c('Opponent' = 'Opponent','calYear' = 'Year'))
-#master = master[,c(1:7,190,182,10:38)]
-#colnames(master)[8:9] = c('HomeAway','WinLoss')
-#master = master[,-c(10,11)] # remove duplicate homeaway and winloss columns
-  
-#master$AllPurpYds = rowSums(cbind(master$KORYds,master$PRYds,master$IntYds, 
-#                              master$RushYds,master$ReceiveYds),na.rm = T)
 
 #### SET UP CHOICES ####
 off_pos_choices = unique(master$PlayerPosition)
@@ -981,7 +971,6 @@ server = function(input, output, session) {
   output$downloadData = downloadHandler(filename = paste(input$v1,'.csv',sep=''),
                                         content = function(file){write.csv(datasetInput(),file,row.names = F)},
                                         contentType = 'text/csv')
-  
 }
 
 
