@@ -6,12 +6,13 @@
 
 #### Dependencies ####
 # uncomment when publishing
-#source('masterbigTEST(1).R')
 #setwd("C:/Users/andrb/OneDrive/Documents/SportsAnalytics")
 library(shiny)
 library(tidyverse)
 library(purrr)
 library(readxl)
+library(googlesheets)
+library(googleAuthR)
 
 #### SET UP SYSTEM TO DEPLOY APP ####
 # rsconnect::setAccountInfo(name='wfuanalytics',
@@ -20,19 +21,42 @@ library(readxl)
 # 
 
 #### IMPORT DATA ####
+gs_deauth()
 master = gs_read(ss=gs_title('mastertotal'))[,-1] # read the sheet into a data frame (exclude first column of indeces)
 def_indiv = gs_read(ss=gs_title('def_ind_reformatted'))[,-1] # read the sheet into a data frame (exclude first column of indeces)
 team = gs_read(ss=gs_title('Team'))[,-1] # read the sheet into a data frame (exclude first column of indeces)
 
+#### Set up data values ####
+maximum_year = as.numeric(format(Sys.Date(), "%Y"))
+
+# If there are null values in calYear, impute as this year and give message
+message = ""
+idx_null_yr_off = which(is.na(master$calYear))
+if(length(idx_null_yr_off) > 0){
+  master$calYear[idx_null_yr_off] = maximum_year
+  indexes = paste(idx_null_yr_off,collapse = ' ')
+  message = paste(message,paste('There are missing values in the offensive data column "calYear" at index(s) ',indexes,' in the google sheet. ',
+                  'The values in this column were imputed as ',maximum_year,'.',sep = ''))
+}
+idx_null_yr_def = which(is.na(def_indiv$calYear))
+if(length(idx_null_yr_def) > 0){
+  def_indiv$calYear[idx_null_yr_def] = maximum_year
+  indexes = paste(idx_null_yr_def,collapse = ', ')
+  message = paste(message,paste('There are missing values in the defensive individual data column "calYear" at index(s) ',indexes,' in the google sheet. ',
+                  'The values in this column were imputed as ',maximum_year,'.',sep = ''))
+}
+
+minimum_year = as.numeric(min(c(master$calYear,def_indiv$calYear,team$Year)))
+
+
+
 #### SET UP CHOICES ####
 off_pos_choices = unique(master$PlayerPosition)
-#off_pos_choices = sort(off_pos_choices[which(!is.na(off_pos_choices))])
 off_pos_choices = c(sort(off_pos_choices),'Unknown')
 def_pos_choices = unique(sort(def_indiv$PlayerPosition))
 off_academic_yr_choices = c(unique(sort(master$PlayerYear)),'Unknown')
 def_academic_yr_choices = unique(sort(def_indiv$PlayerYear))
-#off_academic_yr_choices = sort(off_academic_yr_choices[which(!is.na(off_academic_yr_choices))])
-game_area_choices = c('All Areas','Rushing','Passing','Recieving','Punting','Kicking','Interceptions','All Purpose','Punt Return','Kick Return')
+ game_area_choices = c('All Areas','Rushing','Passing','Recieving','Punting','Kicking','Interceptions','All Purpose','Punt Return','Kick Return')
 team_choices = c('Rush Offense','Receiving Offense','Pass Offense','Kickoff Return',
                  'Punt Return','Total Offense','Defense','Place Kicking','Punting',
                  'Kickoffs','Other Measures')
@@ -104,10 +128,6 @@ def_pos_box = list(tags$div(align = 'left',
                                                choices  = def_pos_choices,
                                                inline   = FALSE)))
 
-maximum_year = as.numeric(format(Sys.Date(), "%Y"))
-minimum_year = as.numeric(min(c(master$calYear,def_indiv$calYear,team$Year)))
-
-
 #### UI ####
 ui = fluidPage(
   titlePanel("Wake Forest Football Statistics"),
@@ -147,8 +167,6 @@ ui = fluidPage(
     radioButtons('home_away','Home vs. Away',
                  c('Both','Home','Away')) 
   ),
-  
-  #headerPanel('_________________'),
   
   ## Choose the number of additional filters to add ##
   numericInput("num_add","Number of Additional Individual Game Filters (Max 7):",0,min = 0,max = 7), 
@@ -314,6 +332,14 @@ ui = fluidPage(
 
 #### SERVER ####
 server = function(input, output, session) {
+  gar_shiny_auth(session)
+  if(nchar(message) > 0){
+    observe({
+    showModal(modalDialog(
+      title = "Important Message",
+      message
+    ))
+  })}
   observe({
     ## IF DEFENSIVE INDIVIDUAL ##
     if(input$v1 == 'def_ind'){
@@ -970,6 +996,7 @@ server = function(input, output, session) {
   output$downloadData = downloadHandler(filename = paste(input$v1,'.csv',sep=''),
                                         content = function(file){write.csv(datasetInput(),file,row.names = F)},
                                         contentType = 'text/csv')
+  
 }
 
 
@@ -977,5 +1004,5 @@ server = function(input, output, session) {
 
 
 #### RUN SHINYAPP ####
-shinyApp(ui = ui, server = server)
+shinyApp(ui = gar_shiny_ui(ui), server = server)
 
