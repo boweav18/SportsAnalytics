@@ -3,6 +3,7 @@ library(janitor)
 library(readxl)
 library(stringr)
 
+## Hey Minghai!! ###
 
 #loading data
 #setwd("~/WFU/Analytics Team/def")
