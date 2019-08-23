@@ -14,9 +14,9 @@ library(readxl)
 library(googlesheets)
 
 #### SET UP SYSTEM TO DEPLOY APP ####
-# rsconnect::setAccountInfo(name='wfuanalytics',
-#                           token='54006636346BF0F925ABFEBC7CF6B2C5',
-#                           secret='pOMojl0oRky5Ae1g3zOdGW3Si/EjD8v388BiDWMS')
+ # rsconnect::setAccountInfo(name='wfuanalytics',
+ #                           token='54006636346BF0F925ABFEBC7CF6B2C5',
+ #                           secret='pOMojl0oRky5Ae1g3zOdGW3Si/EjD8v388BiDWMS')
 # 
 
 #### IMPORT DATA ####
@@ -460,7 +460,7 @@ server = function(input, output, session) {
     
     ## IF TEAM ##
     else if(input$v1 == 'team'){
-      cols = c(1:5,147,154)
+      cols = c(1:5,147,154,252:ncol(team))
       rows = 1:nrow(team)
       if('Rush Offense' %in% input$wake_team_choices){
         cols = c(cols,6:9)
